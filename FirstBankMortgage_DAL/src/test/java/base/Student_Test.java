@@ -30,6 +30,7 @@ public class Student_Test {
 	public void test() {
 		//FinalExam - Add some meaningful junit tests.
 		assertTrue(1==1);
+		StudentDAL.getStudents();
 	}
 
 }
