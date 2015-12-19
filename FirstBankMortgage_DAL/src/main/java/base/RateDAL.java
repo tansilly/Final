@@ -11,18 +11,127 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import domain.RateDomainModel;
+import domain.StudentDomainModel;
 import util.HibernateUtil;
 
 public class RateDAL {
 
 
 	public static double getRate(int GivenCreditScore) {
-		//FinalExam - please implement		
-		// Figure out which row makes sense- return back the 
-		// right interest rate from the table based on the given credit score
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		int employeeID = 0;
+		try {
+			tx = session.beginTransaction();
+			session.save(GivenCreditScore);
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return GivenCreditScore;
+     }
+
+	public static ArrayList<RateDomainModel> getRates() {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		RateDomainModel rateGet = null;		
+		ArrayList<RateDomainModel> rates = new ArrayList<RateDomainModel>();
 		
-		//FinalExam - obviously change the return value
-		return 0;
-	}
+		try {
+			tx = session.beginTransaction();	
+			
+			List Rates = session.createQuery("FROM RateDomainModel").list();
+			for (Iterator iterator = Rates.iterator(); iterator.hasNext();) {
+				RateDomainModel rate = (RateDomainModel) iterator.next();
+				rates.add(rate);
+
+			}
+			
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return rates;
+	}	
+	
+	public static RateDomainModel getRate(UUID rateID) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		RateDomainModel rateGet = null;		
+		
+		try {
+			tx = session.beginTransaction();	
+									
+			Query query = session.createQuery("from RateDomainModel where RateId = :id ");
+			query.setParameter("id", rateID.toString());
+			
+			List<?> list = query.list();
+			rateGet = (RateDomainModel)list.get(0);
+			
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return rateGet;
+	}	
+	
+	public static void deleteRate(UUID rateID) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		RateDomainModel rateGet = null;		
+		
+		try {
+			tx = session.beginTransaction();	
+									
+			RateDomainModel rate = (RateDomainModel) session.get(RateDomainModel.class, rateID);
+			session.delete(rate);
+		
+			
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+	}	
+	
+	public static RateDomainModel updateRate(RateDomainModel rate) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		RateDomainModel rateGet = null;		
+		
+		try {
+			tx = session.beginTransaction();	
+									
+			session.update(rate);
+	
+			
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return rate;
+	}	
+
 
 }

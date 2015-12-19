@@ -2,11 +2,18 @@ package base;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+
+import domain.StudentDomainModel;
 
 public class Student_Test {
 
@@ -28,7 +35,15 @@ public class Student_Test {
 
 	@Test
 	public void test() {
-		//FinalExam - Add some meaningful junit tests.
+		Date dBirthDate = null;
+		try {
+			dBirthDate = new SimpleDateFormat("yyyy-MM-dd").parse("1972-07-31");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		StudentDomainModel stu = new StudentDomainModel("Tim", "Isaac" ,"Tanzilli",dBirthDate);
+
+
 		assertTrue(1==1);
 		StudentDAL.getStudents();
 	}
